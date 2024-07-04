@@ -16,6 +16,6 @@ WORKDIR /eland
 RUN --mount=type=cache,target=/root/.cache/pip \
     python3 -m pip install \
       --no-cache-dir --disable-pip-version-check \
-      torch==1.10.0+cpu -f https://download.pytorch.org/whl/torch_stable.html eland[all]==8.11.1
+      torch==1.11.0+cpu -f https://download.pytorch.org/whl/torch_stable.html eland[all]==8.11.1
 
 CMD ["/bin/sh"]
