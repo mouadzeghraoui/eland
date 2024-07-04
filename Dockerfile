@@ -14,11 +14,15 @@ ADD . /eland
 WORKDIR /eland
 
 ARG TARGETPLATFORM
+
+ENV TRANSFORMERS_CACHE=/tmp/transformers_cache
+RUN mkdir -p /tmp/transformers_cache && chmod 777 /tmp/transformers_cache
+
 RUN --mount=type=cache,target=/root/.cache/pip \
     if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
       python3 -m pip install \
         --no-cache-dir --disable-pip-version-check --extra-index-url https://download.pytorch.org/whl/cpu  \
-        torch==2.1.0+cpu .[all]; \
+        torch==1.13.1+cpu .[all]; \
     else \
       python3 -m pip install \
         --no-cache-dir --disable-pip-version-check \
