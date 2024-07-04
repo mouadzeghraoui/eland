@@ -1,37 +1,40 @@
 # syntax=docker/dockerfile:1
 FROM python:3.10-slim
 
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && apt-get install -y \
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
       build-essential \
       pkg-config \
       cmake \
       libzip-dev \
       libjpeg-dev
 
-ADD . /eland
+# Set up environment variables for cache directories
+ENV MPLCONFIGDIR=/tmp/matplotlib-cache
+ENV TRANSFORMERS_CACHE=/tmp/transformers-cache
+ENV TORCH_HOME=/tmp/torch-cache
+ENV VIRTUAL_ENV=/opt/venv
+
+# Create and set permissions for cache directories
+RUN mkdir -p $MPLCONFIGDIR $TRANSFORMERS_CACHE $TORCH_HOME $VIRTUAL_ENV && \
+    chmod 777 $MPLCONFIGDIR $TRANSFORMERS_CACHE $TORCH_HOME
+
+# Create a virtual environment
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Set working directory
 WORKDIR /eland
 
-ARG TARGETPLATFORM
+# Copy the current directory contents into the container
+COPY . /eland
 
-ENV MPLCONFIGDIR=/tmp/matplotlib-cache
-RUN mkdir -p /tmp/matplotlib-cache && chmod 777 /tmp/matplotlib-cache
+# Install PyTorch and other dependencies
+RUN pip install --no-cache-dir torch==1.13.1+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html && \
+    pip install --no-cache-dir -e .[pytorch]
 
-ENV TRANSFORMERS_CACHE=/tmp/transformers_cache
-RUN mkdir -p /tmp/transformers_cache && chmod 777 /tmp/transformers_cache
+# Verify PyTorch version
+RUN python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
 
-RUN --mount=type=cache,target=/root/.cache/pip \
-    if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
-      python3 -m pip install \
-        --no-cache-dir --disable-pip-version-check --extra-index-url https://download.pytorch.org/whl/cpu  \
-        torch==1.13.1+cpu \
-        .[all]; \
-    else \
-      python3 -m pip install \
-        --no-cache-dir --disable-pip-version-check \
-        torch==1.13.1 \
-        .[all]; \
-    fi
-
-CMD ["/bin/sh"]
+# Set the default command
+CMD ["python", "-m", "eland_import_hub_model"]
