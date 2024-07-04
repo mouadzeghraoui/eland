@@ -1,22 +1,3 @@
-#  Licensed to Elasticsearch B.V. under one or more contributor
-#  license agreements. See the NOTICE file distributed with
-#  this work for additional information regarding copyright
-#  ownership. Elasticsearch B.V. licenses this file to you under
-#  the Apache License, Version 2.0 (the "License"); you may
-#  not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
-#
-# 	http://www.apache.org/licenses/LICENSE-2.0
-#
-#  Unless required by applicable law or agreed to in writing,
-#  software distributed under the License is distributed on an
-#  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-#  KIND, either express or implied.  See the License for the
-#  specific language governing permissions and limitations
-#  under the License.
-
-# flake8: noqa
-
 from codecs import open
 from os import path
 
@@ -58,9 +39,9 @@ extras = {
     "scikit-learn": ["scikit-learn>=1.3,<2"],
     "lightgbm": ["lightgbm>=2,<4"],
     "pytorch": [
-        "torch>=1.13.1,<2.0",
-        "sentence-transformers>=2.1.0,<=2.2.2",
-        "transformers[torch]>=4.31.0,<=4.33.2",
+        "torch>=1.9.0,<1.10",
+        "sentence-transformers>=2.1.0,<2.2.2",
+        "transformers[torch]>=4.31.0,<4.33.2",
     ],
 }
 extras["all"] = list({dep for deps in extras.values() for dep in deps})
@@ -72,10 +53,10 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url=about["__url__"],
-    author=about["__author__"],
-    author_email=about["__author_email__"],
-    maintainer=about["__maintainer__"],
-    maintainer_email=about["__maintainer_email__"],
+    author=about["__author"],
+    author_email=about["__author_email"],
+    maintainer=about["__maintainer"],
+    maintainer_email=about["__maintainer_email"],
     license="Apache-2.0",
     classifiers=CLASSIFIERS,
     keywords="elastic eland pandas python",
