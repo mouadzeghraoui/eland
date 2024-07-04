@@ -58,7 +58,7 @@ extras = {
     "scikit-learn": ["scikit-learn>=1.3,<2"],
     "lightgbm": ["lightgbm>=2,<4"],
     "pytorch": [
-        "torch>=1.9.0,<2.0",
+        "torch=1.9.0",
         "sentence-transformers>=2.1.0,<=2.2.2",
         "transformers[torch]>=4.31.0,<=4.33.2",
     ],
