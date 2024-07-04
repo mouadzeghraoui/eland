@@ -13,16 +13,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 ADD . /eland
 WORKDIR /eland
 
-ARG TARGETPLATFORM
 RUN --mount=type=cache,target=/root/.cache/pip \
-    if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
-      python3 -m pip install \
-        --no-cache-dir --disable-pip-version-check --extra-index-url https://download.pytorch.org/whl/cpu  \
-        torch==1.13.1+cpu .[all]; \
-    else \
-      python3 -m pip install \
-        --no-cache-dir --disable-pip-version-check \
-        .[all]; \
-    fi
+    python3 -m pip install \
+      --no-cache-dir --disable-pip-version-check \
+      torch==1.9.0 eland[all]==8.11.1
 
 CMD ["/bin/sh"]
